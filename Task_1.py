@@ -86,7 +86,18 @@ INSERT INTO Tracks(name, duration, album_id) VALUES
 ('Незабудки', 152, 3),
 ('Каждый раз', 197, 3),
 ('Мой рок-н-ролл', 197, 3),
-('Вау мой Абоба', 210, 4);
+('Вау мой Абоба', 210, 4),
+('my own', 100, 4),
+('own my', 100, 4),
+('my', 100, 4),
+('oh my god', 100, 4),
+('myself', 100, 4),
+('by myself', 100, 4),
+('bemy self', 100, 4),
+('myself by', 100, 4),
+('by myself by', 100, 4),
+('beemy', 100, 4),
+('premyne', 100, 4);
 
 INSERT INTO Collection(name, date) VALUES 
 ('Легендарный рок', '2020-01-01'),

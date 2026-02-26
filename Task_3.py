@@ -46,6 +46,7 @@ tracks_id INTEGER NOT NULL REFERENCES Tracks(id)
 );
 
 
+#Начало 1 задания
 
 
 INSERT INTO Genre(name) VALUES ('Рок'), ('Рэп'), ('Поп');
@@ -85,7 +86,18 @@ INSERT INTO Tracks(name, duration, album_id) VALUES
 ('Незабудки', 152, 3),
 ('Каждый раз', 197, 3),
 ('Мой рок-н-ролл', 197, 3),
-('Вау мой Абоба', 210, 4);
+('Вау мой Абоба', 210, 4),
+('my own', 100, 4),
+('own my', 100, 4),
+('my', 100, 4),
+('oh my god', 100, 4),
+('myself', 100, 4),
+('by myself', 100, 4),
+('bemy self', 100, 4),
+('myself by', 100, 4),
+('by myself by', 100, 4),
+('beemy', 100, 4),
+('premyne', 100, 4);
 
 INSERT INTO Collection(name, date) VALUES
 ('Легендарный рок', '2020-01-01'),
@@ -100,54 +112,58 @@ INSERT INTO CollectTracks(collection_id, tracks_id) VALUES
 #Начало 2 задания
 
 
-SELECT name AS название_трека, duration AS продолжительность
-FROM Tracks
+SELECT name, duration FROM Tracks
 ORDER BY duration DESC
 LIMIT 1;
 
-SELECT name AS название_трека
-FROM Tracks
+SELECT name FROM Tracks
 WHERE duration >= 210;
 
-SELECT name AS название_сборника
-FROM Collection
+SELECT name FROM Collection
 WHERE EXTRACT(YEAR FROM date) BETWEEN 2018 AND 2020;
 
-SELECT name AS исполнитель
-FROM Performers
+SELECT name FROM Performers
 WHERE name NOT LIKE '% %';
 
-SELECT name AS название_трека
-FROM Tracks
-WHERE LOWER(name) LIKE '%мой%' OR LOWER(name) LIKE '%my%';
-
+SELECT name FROM Tracks
+WHERE name ILIKE 'мой'
+OR name ILIKE 'мой  %'
+OR name ILIKE '% мой %'
+OR name ILIKE '% мой'
+OR name ILIKE 'my %'
+OR name ILIKE '% my %'
+OR name ILIKE '% my'
+OR name ILIKE 'my';
 
 
 #Начало 3 задания
 
 
-SELECT g.name AS жанр, COUNT(p.id) AS количество_исполнителей
-FROM Genre g
+SELECT g.name, COUNT(p.id) FROM Genre g
 JOIN PerfGenre pg ON g.id = pg.genre_id
 JOIN Performers p ON pg.performers_id = p.id
 GROUP BY g.name;
 
-SELECT COUNT(t.id) AS количество_треков
-FROM Tracks t
+SELECT COUNT(t.id) FROM Tracks t
 JOIN Album a ON t.album_id = a.id
 WHERE EXTRACT(YEAR FROM a.date) IN (2019, 2020);
 
-SELECT a.name AS альбом, ROUND(AVG(t.duration)) AS средняя_продолжительность
-FROM Tracks t
+SELECT a.name, ROUND(AVG(t.duration)) FROM Tracks t
 JOIN Album a ON t.album_id = a.id
 GROUP BY a.name;
 
-SELECT p.name AS исполнитель
-FROM Performers p
-LEFT JOIN AlbPerformers ap ON p.id = ap.performers_id
-LEFT JOIN Album a ON ap.album_id = a.id
-WHERE a.date IS NULL OR EXTRACT(YEAR FROM a.date) <> 2020;
+SELECT p.name FROM Performers p
+WHERE p.id NOT IN (
+    SELECT DISTINCT performers_id
+    FROM AlbPerformers ap
+    JOIN Album a ON ap.album_id = a.id
+    WHERE EXTRACT(YEAR FROM a.date) = 2020
+);
 
-SELECT DISTINCT c.name AS название_сборника
-FROM Collection c
-JOIN CollectTracks ct ON c.id = ct.collection_id
+SELECT DISTINCT Collection.name FROM Collection
+JOIN CollectTracks ON Collection.id = Collecttracks.сollection_id
+JOIN Tracks ON CollectTracks.tracks_id = Tracks.id
+JOIN Album ON Tracks.album_id = Album.id
+JOIN AlbPerformers ON Album.id = AlbPerformers.album_id
+JOIN Performers ON AlbPerformers.performers_id = Performers.id
+WHERE Performers.name = 'Король и Шут';
